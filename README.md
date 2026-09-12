@@ -9,6 +9,9 @@ An ML-powered network security analysis platform for intrusion detection, attack
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ---
+## 🚀 Live Demo
+
+[**Open NetGuard AI Live Demo →**](https://netguard-ai-985w.onrender.com)
 
 ## Overview
 
