@@ -1,0 +1,76 @@
+{
+  "train_shape": [
+    25192,
+    42
+  ],
+  "test_shape": [
+    22544,
+    41
+  ],
+  "target_col": "class",
+  "target_counts": {
+    "normal": 13449,
+    "anomaly": 11743
+  },
+  "target_distribution": {
+    "normal": 0.5338599555414417,
+    "anomaly": 0.4661400444585583
+  },
+  "total_features": 41,
+  "numerical_feature_count": 38,
+  "categorical_feature_count": 3,
+  "categorical_features": [
+    "protocol_type",
+    "service",
+    "flag"
+  ],
+  "constant_features": [
+    "num_outbound_cmds",
+    "is_host_login"
+  ],
+  "missing_values_train": 0,
+  "missing_values_test": 0,
+  "categorical_summary": {
+    "protocol_type": {
+      "train_unique_count": 3,
+      "test_unique_count": 3,
+      "train_categories": [
+        "tcp",
+        "udp",
+        "icmp"
+      ]
+    },
+    "service": {
+      "train_unique_count": 66,
+      "test_unique_count": 64,
+      "train_categories": [
+        "ftp_data",
+        "other",
+        "private",
+        "http",
+        "remote_job",
+        "name",
+        "netbios_ns",
+        "eco_i",
+        "mtp",
+        "telnet"
+      ]
+    },
+    "flag": {
+      "train_unique_count": 11,
+      "test_unique_count": 11,
+      "train_categories": [
+        "SF",
+        "S0",
+        "REJ",
+        "RSTR",
+        "SH",
+        "RSTO",
+        "S1",
+        "RSTOS0",
+        "S3",
+        "S2"
+      ]
+    }
+  }
+}

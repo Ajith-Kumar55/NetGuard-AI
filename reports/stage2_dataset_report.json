@@ -1,0 +1,48 @@
+{
+  "total_rows": 25192,
+  "normal_count": 13449,
+  "DoS_count": 9234,
+  "Probe_count": 2289,
+  "R2L_count": 209,
+  "U2R_count": 11,
+  "family_distribution": {
+    "normal": 13449,
+    "DoS": 9234,
+    "Probe": 2289,
+    "R2L": 209,
+    "U2R": 11
+  },
+  "family_percentages": {
+    "normal": 53.39,
+    "DoS": 36.65,
+    "Probe": 9.09,
+    "R2L": 0.83,
+    "U2R": 0.04
+  },
+  "original_attack_counts": {
+    "normal": 13449,
+    "neptune": 8282,
+    "ipsweep": 710,
+    "satan": 691,
+    "portsweep": 587,
+    "smurf": 529,
+    "nmap": 301,
+    "back": 196,
+    "teardrop": 188,
+    "warezclient": 181,
+    "pod": 38,
+    "guess_passwd": 10,
+    "warezmaster": 7,
+    "buffer_overflow": 6,
+    "imap": 5,
+    "rootkit": 4,
+    "multihop": 2,
+    "phf": 2,
+    "ftp_write": 1,
+    "land": 1,
+    "loadmodule": 1,
+    "spy": 1
+  },
+  "missing_values": 0,
+  "duplicate_rows": 0
+}

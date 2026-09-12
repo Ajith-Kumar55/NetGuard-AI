@@ -1,0 +1,48 @@
+{
+  "note": "Full training set fit evaluation. Official model selection metric is 99.68% Stratified Validation Accuracy (20% split) stored in models/metrics.json.",
+  "dataset": "data/Train_data.csv",
+  "total_samples": 25192,
+  "confusion_matrix": [
+    [
+      13448,
+      1
+    ],
+    [
+      4,
+      11739
+    ]
+  ],
+  "confusion_matrix_legend": {
+    "TN": 13448,
+    "FP": 1,
+    "FN": 4,
+    "TP": 11739
+  },
+  "classification_report": {
+    "normal": {
+      "precision": 0.999702646446625,
+      "recall": 0.9999256450293702,
+      "f1-score": 0.9998141333035947,
+      "support": 13449.0
+    },
+    "anomaly": {
+      "precision": 0.9999148211243611,
+      "recall": 0.9996593715404922,
+      "f1-score": 0.9997870800153302,
+      "support": 11743.0
+    },
+    "accuracy": 0.9998015242934265,
+    "macro avg": {
+      "precision": 0.9998087337854931,
+      "recall": 0.9997925082849313,
+      "f1-score": 0.9998006066594625,
+      "support": 25192.0
+    },
+    "weighted avg": {
+      "precision": 0.999801549560338,
+      "recall": 0.9998015242934265,
+      "f1-score": 0.9998015226826005,
+      "support": 25192.0
+    }
+  }
+}

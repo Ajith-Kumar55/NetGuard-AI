@@ -1,0 +1,90 @@
+{
+  "model_name": "RandomForestClassifier",
+  "target_classes": [
+    "DoS",
+    "Probe",
+    "R2L",
+    "U2R"
+  ],
+  "train_samples": 9394,
+  "val_samples": 2349,
+  "total_anomaly_samples": 11743,
+  "accuracy": 0.9991,
+  "macro_precision": 0.9936,
+  "macro_recall": 0.8749,
+  "macro_f1": 0.9134,
+  "weighted_precision": 0.9992,
+  "weighted_recall": 0.9991,
+  "weighted_f1": 0.9991,
+  "classification_report": {
+    "DoS": {
+      "precision": 1.0,
+      "recall": 0.9994585814834868,
+      "f1-score": 0.9997292174383969,
+      "support": 1847.0
+    },
+    "Probe": {
+      "precision": 0.9978213507625272,
+      "recall": 1.0,
+      "f1-score": 0.9989094874591058,
+      "support": 458.0
+    },
+    "R2L": {
+      "precision": 0.9767441860465116,
+      "recall": 1.0,
+      "f1-score": 0.9882352941176471,
+      "support": 42.0
+    },
+    "U2R": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1-score": 0.6666666666666666,
+      "support": 2.0
+    },
+    "accuracy": 0.9991485738612176,
+    "macro avg": {
+      "precision": 0.9936413842022597,
+      "recall": 0.8748646453708717,
+      "f1-score": 0.9133851664204541,
+      "support": 2349.0
+    },
+    "weighted avg": {
+      "precision": 0.999159401644611,
+      "recall": 0.9991485738612176,
+      "f1-score": 0.9990803003623944,
+      "support": 2349.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      1846,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      458,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      42,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      1
+    ]
+  ],
+  "labels": [
+    "DoS",
+    "Probe",
+    "R2L",
+    "U2R"
+  ]
+}

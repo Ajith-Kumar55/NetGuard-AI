@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetGuard AI — AI-Powered Network Intrusion Detection System</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- Chart.js CDN for threat analytics visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. OAUTH2 JWT LOGIN MODAL / VIEW
+       ========================================================================= -->
+  <div id="login-view" class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <span class="shield-logo">🛡️</span>
+        <h1>NetGuard <span>AI</span></h1>
+        <p class="subtitle">AI-Powered Network Intrusion Detection System</p>
+      </div>
+
+      <div class="demo-credentials-banner">
+        <p>🔐 <strong>Portfolio Demo Access</strong><br>Use the provided demo credentials to access the system.</p>
+      </div>
+
+      <div id="login-error" class="alert-box error-box hidden">
+        <span id="login-error-msg">Invalid username or password.</span>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" value="admin" required placeholder="Enter username" />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="password-input-group">
+            <input type="password" id="login-password" value="admin123" required placeholder="Enter password" />
+            <button type="button" id="btn-toggle-password" class="btn-eye" title="Toggle Password Visibility">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login-submit">
+          🔒 Authenticate & Access System
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Machine Learning Based Network Intrusion Detection System</p>
+        <p class="disclaimer-text">FastAPI OAuth2 Bearer Token Authentication Layer</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       2. MAIN DASHBOARD APPLICATION VIEW (Protected)
+       ========================================================================= -->
+  <div id="app-view" class="app-wrapper hidden">
+    
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <span class="shield-logo">🛡️</span>
+          <div>
+            <h2>NetGuard <span>AI</span></h2>
+            <p class="nav-sub">AI-Powered Network Intrusion Detection System</p>
+          </div>
+        </div>
+
+        <!-- LIVE SYSTEM STATUS INDICATORS -->
+        <div class="status-group">
+          <span id="status-model" class="status-badge connected">
+            <span class="status-dot"></span> Model Loaded
+          </span>
+          <span id="status-api" class="status-badge connected">
+            <span class="status-dot"></span> API Online
+          </span>
+          <span id="status-user" class="status-badge user-badge">
+            👤 <span id="user-display-name">admin</span>
+          </span>
+        </div>
+
+        <!-- NAVIGATION MENU -->
+        <nav class="nav-menu">
+          <button class="nav-tab-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
+          <button class="nav-tab-btn" data-tab="tab-ingestion">📁 File Analysis (PCAP/CSV)</button>
+          <button class="nav-tab-btn" data-tab="tab-history">📜 Detection History</button>
+          <button class="nav-tab-btn" data-tab="tab-model-info">ℹ️ Model Info</button>
+          <button class="nav-tab-btn" data-tab="tab-about">📖 About</button>
+          <button id="btn-logout" class="btn btn-outline-danger btn-sm">🚪 Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-container">
+
+      <!-- ===================================================================
+           TAB 1: DASHBOARD OVERVIEW
+           =================================================================== -->
+      <section id="tab-dashboard" class="tab-page active">
+        <div class="page-title-bar">
+          <h2>Security Operations Center (SOC) Threat Triage</h2>
+          <p>Real-time machine learning threat triage, risk scoring, and attack family distribution.</p>
+        </div>
+
+        <!-- KPI SUMMARY CARDS -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon blue">📊</div>
+            <div class="kpi-data">
+              <h3 id="kpi-total-preds">0</h3>
+              <p>Total Analyzed Flows</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green">✅</div>
+            <div class="kpi-data">
+              <h3 id="kpi-normal-preds">0</h3>
+              <p>Normal Traffic</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon red">🚨</div>
+            <div class="kpi-data">
+              <h3 id="kpi-anomaly-preds">0</h3>
+              <p>Anomalies Detected</p>
+            </div>
+          </div>
+          <div class="kpi-card highlight">
+            <div class="kpi-icon purple">⚡</div>
+            <div class="kpi-data">
+              <h3>99.68%</h3>
+              <p>Validation Accuracy</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon yellow">⏱️</div>
+            <div class="kpi-data">
+              <h3 id="kpi-avg-latency">0.00 ms</h3>
+              <p>Avg Flow Latency <span class="badge green btn-xs" style="font-size: 10px; padding: 2px 5px;">Real-Time</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="dashboard-grid mt-20">
+          <div class="card">
+            <div class="card-header">
+              <h3>Attack Family Distribution</h3>
+              <span class="badge blue">Live Session Analysis</span>
+            </div>
+            <div id="chart-empty-msg" class="empty-state-box">
+              <p class="empty-text">No threat analysis history available yet.</p>
+              <p class="empty-sub">Upload a PCAP or CSV file in "File Analysis" tab to generate live threat triage.</p>
+            </div>
+            <div id="chart-wrapper" class="chart-container hidden">
+              <canvas id="predictionChart"></canvas>
+            </div>
+          </div>
+
+          <!-- RECENT TRIAGE SUMMARY -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Recent Threat Triage Log</h3>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-sm btn-outline-success" id="btn-export-csv">📥 Export Audit Log (CSV)</button>
+                <button class="btn btn-sm btn-outline" id="btn-dash-history-link">View Full DB History</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Source IP</th>
+                    <th>Classification</th>
+                    <th>Family</th>
+                    <th>Risk</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-recent-tbody">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">No detection logs recorded yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           TAB 2: FILE INGESTION & THREAT TRIAGE (CSV / PCAP / PCAPNG)
+           =================================================================== -->
+      <section id="tab-ingestion" class="tab-page">
+        <div class="page-title-bar">
+          <h2>File Ingestion & Automated Threat Analysis</h2>
+          <p>Upload raw PCAP, PCAPNG, or CSV capture files for automated 2-stage ML classification, SHAP attribution, and mitigation guidance.</p>
+        </div>
+
+        <!-- DROPZONE FILE UPLOAD CARD -->
+        <div class="card">
+          <div id="dropzone" class="dropzone-box">
+            <div class="dropzone-icon">📁</div>
+            <h3>Drag & Drop Network Capture File (.pcap, .pcapng, .csv)</h3>
+            <p class="text-muted">or click to browse from your computer (Max size: 50 MB)</p>
+            <input type="file" id="file-input" accept=".csv,.pcap,.pcapng" class="hidden" />
+            <button class="btn btn-primary mt-15" id="btn-browse-file">Browse File</button>
+          </div>
+
+          <!-- UPLOAD & PROCESSING STATUS BAR -->
+          <div id="upload-status-bar" class="upload-status-box hidden mt-15">
+            <div class="status-header">
+              <span id="upload-filename">sample.pcap</span>
+              <span id="upload-stage-badge" class="badge blue">Uploading...</span>
+            </div>
+            <div class="progress-bar-container mt-10">
+              <div id="upload-progress" class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+            <p id="upload-status-text" class="text-muted mt-5">Initializing file parser...</p>
+          </div>
+        </div>
+
+        <!-- BATCH ANALYSIS SUMMARY CARD -->
+        <div id="summary-card" class="card hidden mt-20">
+          <div class="card-header">
+            <h3 id="summary-title">Batch Ingestion Threat Summary</h3>
+            <span id="summary-filetype-badge" class="badge purple">PCAP</span>
+          </div>
+          <div class="kpi-grid mt-15">
+            <div class="kpi-card mini">
+              <h4>Total Flows</h4>
+              <p id="sum-total-records" class="kpi-val">0</p>
+            </div>
+            <div class="kpi-card mini">
+              <h4>Normal</h4>
+              <p id="sum-normal-count" class="kpi-val green">0</p>
+            </div>
+            <div class="kpi-card mini">
+              <h4>Anomalies</h4>
+              <p id="sum-anomaly-count" class="kpi-val red">0</p>
+            </div>
+            <div class="kpi-card mini">
+              <h4>Avg Risk Score</h4>
+              <p id="sum-avg-risk" class="kpi-val">0.0</p>
+            </div>
+            <div class="kpi-card mini">
+              <h4>Max Risk Score</h4>
+              <p id="sum-max-risk" class="kpi-val red">0.0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- THREAT TRIAGE TABLE RESULTS CARD -->
+        <div id="triage-card" class="card hidden mt-20">
+          <div class="card-header">
+            <h3>Threat Triage Results</h3>
+            <span class="badge blue">Interactive Inspection</span>
+          </div>
+          <div class="table-responsive mt-15">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Source IP</th>
+                  <th>Destination IP</th>
+                  <th>Protocol</th>
+                  <th>Classification</th>
+                  <th>Attack Family</th>
+                  <th>Risk Score</th>
+                  <th>Confidence</th>
+                  <th>Top Contributing Feature</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="triage-tbody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADVANCED 41-FEATURE DEBUG ACCORDION (Collapsed by Default) -->
+        <div class="card mt-20">
+          <div class="accordion-header" id="accordion-toggle-debug">
+            <h3>🔧 Advanced 41-Feature Manual Analysis & Debug Form</h3>
+            <span class="accordion-icon" id="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-body hidden" id="accordion-content-debug">
+            <p class="text-muted mb-15">Manually configure specific network traffic attribute values for granular feature testing.</p>
+
+            <form id="traffic-analysis-form">
+              <!-- Preset loaders -->
+              <div class="preset-bar mb-15">
+                <button type="button" id="btn-preset-normal" class="btn btn-outline-success btn-sm">🟢 Load Normal Sample</button>
+                <button type="button" id="btn-preset-anomaly" class="btn btn-outline-danger btn-sm">🔴 Load Anomaly Sample</button>
+                <button type="button" id="btn-reset-form" class="btn btn-outline btn-sm">🔄 Reset Form</button>
+              </div>
+
+              <!-- Form Fields Grid -->
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="f-duration">Duration (s)</label>
+                  <input type="number" step="any" id="f-duration" name="duration" value="0" />
+                </div>
+                <div class="form-group">
+                  <label for="f-protocol_type">Protocol Type</label>
+                  <select id="f-protocol_type" name="protocol_type">
+                    <option value="tcp" selected>tcp</option>
+                    <option value="udp">udp</option>
+                    <option value="icmp">icmp</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="f-service">Service</label>
+                  <input type="text" id="f-service" name="service" value="http" />
+                </div>
+                <div class="form-group">
+                  <label for="f-flag">Flag</label>
+                  <input type="text" id="f-flag" name="flag" value="SF" />
+                </div>
+                <div class="form-group">
+                  <label for="f-src_bytes">Source Bytes</label>
+                  <input type="number" step="any" id="f-src_bytes" name="src_bytes" value="215" />
+                </div>
+                <div class="form-group">
+                  <label for="f-dst_bytes">Destination Bytes</label>
+                  <input type="number" step="any" id="f-dst_bytes" name="dst_bytes" value="450" />
+                </div>
+                <div class="form-group">
+                  <label for="f-count">Count</label>
+                  <input type="number" id="f-count" name="count" value="10" />
+                </div>
+                <div class="form-group">
+                  <label for="f-srv_count">Server Count</label>
+                  <input type="number" id="f-srv_count" name="srv_count" value="10" />
+                </div>
+                <div class="form-group">
+                  <label for="f-serror_rate">SYN Error Rate</label>
+                  <input type="number" step="any" id="f-serror_rate" name="serror_rate" value="0" />
+                </div>
+                <div class="form-group">
+                  <label for="f-same_srv_rate">Same Service Rate</label>
+                  <input type="number" step="any" id="f-same_srv_rate" name="same_srv_rate" value="1.0" />
+                </div>
+                <div class="form-group">
+                  <label for="f-diff_srv_rate">Diff Service Rate</label>
+                  <input type="number" step="any" id="f-diff_srv_rate" name="diff_srv_rate" value="0" />
+                </div>
+                <div class="form-group">
+                  <label for="f-dst_host_count">Dst Host Count</label>
+                  <input type="number" id="f-dst_host_count" name="dst_host_count" value="255" />
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary mt-15" id="btn-submit-predict">
+                🔍 Run Single Feature Prediction
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           TAB 3: DATABASE DETECTION HISTORY (SQLite Persistent)
+           =================================================================== -->
+      <section id="tab-history" class="tab-page">
+        <div class="page-title-bar">
+          <h2>SQLite Persistent Detection History</h2>
+          <p>Historical audit trail stored persistently in SQLite database (`netguard.db`).</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Detection Audit Trail</h3>
+            <button id="btn-clear-history" class="btn btn-outline-danger btn-sm">🗑️ Clear Database History</button>
+          </div>
+
+          <div class="table-responsive mt-15">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Timestamp</th>
+                  <th>Source IP</th>
+                  <th>Destination IP</th>
+                  <th>Classification</th>
+                  <th>Attack Family</th>
+                  <th>Risk Score</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <tr>
+                  <td colspan="8" class="text-center text-muted">Loading persistent detection logs...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PAGINATION CONTROLS -->
+          <div class="pagination-bar mt-15">
+            <button id="btn-hist-prev" class="btn btn-outline btn-sm">◀ Previous</button>
+            <span id="hist-page-info">Page 1 of 1</span>
+            <button id="btn-hist-next" class="btn btn-outline btn-sm">Next ▶</button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           TAB 4: MODEL INFORMATION
+           =================================================================== -->
+      <section id="tab-model-info" class="tab-page">
+        <div class="page-title-bar">
+          <h2>Machine Learning Pipeline Architecture</h2>
+        </div>
+
+        <div class="card">
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="info-lbl">Stage 1 Classifier</span>
+              <span class="info-val">Gradient Boosting Classifier</span>
+            </div>
+            <div class="info-row">
+              <span class="info-lbl">Stage 2 Classifier</span>
+              <span class="info-val">Hierarchical Taxonomy Rules (DoS, Probe, R2L, U2R)</span>
+            </div>
+            <div class="info-row">
+              <span class="info-lbl">Explainable AI (XAI)</span>
+              <span class="info-val">SHAP TreeExplainer Feature Importance Attribution</span>
+            </div>
+            <div class="info-row">
+              <span class="info-lbl">Validation Metrics</span>
+              <span class="info-val">Accuracy: 99.68% | F1-Score: 0.9966 | Precision: 99.83% | Recall: 99.49%</span>
+            </div>
+            <div class="info-row">
+              <span class="info-lbl">Backend Framework</span>
+              <span class="info-val">FastAPI + Scapy + SQLAlchemy (SQLite)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================
+           TAB 5: ABOUT
+           =================================================================== -->
+      <section id="tab-about" class="tab-page">
+        <div class="page-title-bar">
+          <h2>About NetGuard AI</h2>
+          <p>Machine Learning Based Network Intrusion Detection System</p>
+        </div>
+
+        <div class="card">
+          <div class="about-section">
+            <h3>📌 Purpose</h3>
+            <p>
+              NetGuard AI is a capstone-level machine-learning Network Intrusion Detection System designed to analyze network packet captures and traffic connection records, classify them using a 2-stage hierarchical classifier, explain threat predictions via SHAP, and persist security logs into a relational database.
+            </p>
+            <h3 class="mt-20">🛠️ Technology Stack</h3>
+            <p>
+              <strong>Data & ML:</strong> Python, Pandas, Scikit-learn, Scapy, SHAP, Joblib<br />
+              <strong>Backend:</strong> FastAPI, Uvicorn, Pydantic, SQLAlchemy, OAuth2 JWT, Passlib<br />
+              <strong>Frontend:</strong> HTML5, CSS3, JavaScript (ES6+), Chart.js<br />
+              <strong>Database & Container:</strong> SQLite, Docker
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>© 2026 NetGuard AI — Machine Learning Based Network Intrusion Detection System</p>
+    </footer>
+
+  </div>
+
+  <!-- INSPECTION & SHAP MODAL -->
+  <div id="modal-backdrop" class="modal-wrapper hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Threat Explanation & Mitigation</h3>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

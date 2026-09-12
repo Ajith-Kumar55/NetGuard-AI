@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.env
+venv/
+.venv/
+env/
+scratch/
+*.log
+data/*.csv
+
+# Local database
+*.db
+
+# PCAP captures
+*.pcap
